@@ -1,0 +1,160 @@
+#Project edith
+import speech_recognition as sr 
+import datetime
+import wikipedia
+import pyttsx3
+import webbrowser
+import random
+import os
+import wolframalpha
+
+engine = pyttsx3.init('sapi5')
+client = wolframalpha.Client('8UJA83-G3L72Q8JLV')
+
+voices = engine.getProperty('voices')
+engine.setProperty('voice',voices[0].id)
+
+def speak(audio):
+    print('Edith: ' + audio)  
+    engine.say(audio)
+    engine.runAndWait()
+
+def wish():
+    hour = int(datetime.datetime.now().hour)
+    if hour >= 0 and hour<12:
+        speak("good morning sir! how are you! i am here on your service! what can i do for you")
+        
+    elif hour>=12 and hour<18:
+        speak("good afternoon sir! how are you! i am here on your service! what can i do for you") 
+        
+    else:
+        speak("good evening sir! how are you! i am here on your service! what can i do for you")  
+        
+
+
+def takecom():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listning....")
+        audio = r.listen(source)
+    try:
+        print("Recognising.") 
+        text = r.recognize_google(audio,language='en-in')
+        print(text)
+    except Exception:                #For Error handling
+        speak("error...")
+        print("Network connection error") 
+        return "none"
+    return text
+
+                              
+if __name__ == "__main__":
+    wish()
+    while True:
+        query = takecom().lower()
+
+        if "wikipedia" in query:
+            speak("searching details....Wait")
+            query.replace("wikipedia","")
+            results = wikipedia.summary(query,sentences=2)
+            print(results)
+            speak(results)
+        elif 'open youtube' in query or "open video online" in query:
+            webbrowser.open("www.youtube.com")
+            speak("opening youtube")
+        elif 'open github' in query:
+            webbrowser.open("https://www.github.com")
+            speak("opening github")  
+        elif 'open facebook' in query:
+            webbrowser.open("https://www.facebook.com")
+            speak("opening facebook")      
+        elif 'open instagram' in query:
+            webbrowser.open("https://www.instagram.com")
+            speak("opening instagram")    
+        elif 'open google' in query:
+            webbrowser.open("https://www.google.com")
+            speak("opening google")
+            
+        elif 'open yahoo' in query:
+            webbrowser.open("https://www.yahoo.com")
+            speak("opening yahoo")
+            
+        elif 'open gmail' in query:
+            webbrowser.open("https://mail.google.com")
+            speak("opening google mail") 
+            
+        elif 'open snapdeal' in query:
+            webbrowser.open("https://www.snapdeal.com") 
+            speak("opening snapdeal")  
+             
+        elif 'open amazon' in query or 'shop online' in query:
+            webbrowser.open("https://www.amazon.com")
+            speak("opening amazon")
+        elif 'open flipkart' in query:
+            webbrowser.open("https://www.flipkart.com")
+            speak("opening flipkart")   
+        elif 'open ebay' in query:
+            webbrowser.open("https://www.ebay.com")
+            speak("opening ebay")
+        elif 'music from pc' in query or "music" in query:
+            speak("ok i am playing music")
+            music_dir = 'X:\\project edith\\music'
+            musics = os.listdir(music_dir)
+            os.startfile(os.path.join(music_dir,musics[0])) 
+        elif 'good bye' in query:
+            speak("good bye")
+            exit()
+        elif "shutdown" in query:
+            speak("shutting down")
+            os.system('shutdown -s') 
+        elif "what's up" in query or 'how are you' in query:
+            stMsgs = ['Just doing my thing!', 'I am fine!', 'Nice!', 'I am nice and full of energy','i am okey ! How are you']
+            ans_q = random.choice(stMsgs)
+            speak(ans_q)  
+        elif 'make you' in query or 'created you' in query or 'develop you' in query or 'made you' in query:
+            ans_m = " For your information Abhiraj! Created me"
+            print(ans_m)
+            speak(ans_m)
+        elif "who are you" in query or "about you" in query or "your details" in query:
+            about = "I am edith! an A I based computer program! i can help you lot like a your close friend ! i promise you ! Simple try me to give simple command ! can playing music! search things on wikipedia or online ! lets Start"
+
+            speak(about)
+        elif "hello" in query or "hello edith" in query:
+            hel = "Hello Sir ! How May i Help you.."
+            print(hel)
+            speak(hel)
+        elif "your name" in query or "sweat name" in query:
+            na_me = "Thanks for Asking my name! i am edith"  
+            print(na_me)
+            speak(na_me)
+        elif "you feeling" in query:
+            print("feeling great sir ")
+            speak("feeling great sir") 
+        elif query == 'none':
+            continue 
+        elif 'exit' in query or 'abort' in query or 'stop' in query or 'bye' in query or 'quit' in query :
+            ex_exit = ' self destructing in ! 5 4 3 2 1 ! just kidding sir ! see you soon'
+            speak(ex_exit)
+            exit()    
+        else:
+            query = query
+            speak('Searching...')
+            try:
+                try:
+                    res = client.query(query)
+                    results = next(res.results).text
+                    speak('Got it.')
+                    speak('WOLFRAM-ALPHA says - ')
+                    speak(results)
+                    
+                except:
+                    results = wikipedia.summary(query, sentences=2)
+                    speak('Got it.')
+                    speak('WIKIPEDIA says - ')
+                    speak(results)
+        
+            except:
+                webbrowser.open('www.google.com')
+                  
+        
+        speak('Next Command Sir')                              
