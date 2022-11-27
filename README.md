@@ -2,7 +2,7 @@
 personal customizable virtual assistant.
 1. extract the files.
 2. open the folder in your IDE.
-3. intall all the libraries\pips
+3. install all the libraries\pips
 4. for wolframealpha
    goto browser and register there with your email then
    you will get a code,
